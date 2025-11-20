@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Моё мини-приложение</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Подключаем Telegram Web App API -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { padding: 20px; font-family: sans-serif; }
+    button { padding: 12px 20px; font-size: 16px; background: #0088cc; color: white; border: none; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Привет, Данил!</h1>
+  <p>Ты в мини-приложении в Telegram!</p>
+  <button onclick="Telegram.WebApp.close()">Закрыть</button>
+
+  <script>
+    // Получаем данные пользователя (если нужно)
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Расширяет окно
+    // tg.ready(); // Раскомментируй, если приложение готово к работе
+  </script>
+</body>
+</html>
