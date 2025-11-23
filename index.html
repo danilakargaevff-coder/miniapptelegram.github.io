@@ -42,3 +42,89 @@
     <!-- КАТАЛОГ Б/У -->
     <section class="page" id="page-used">
         <h1 class="page-title">Каталог Б/У</h1>
+
+        <!-- Поисковая строка -->
+        <div class="search-bar">
+            <input id="search-used" type="text" placeholder="Поиск по Б/У товарам">
+        </div>
+
+        <!-- Фильтры брендов -->
+        <div class="brand-filters" id="brand-filters-used">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="Honor">Honor</button>
+            <button class="brand-btn" data-brand="Realme">Realme</button>
+            <button class="brand-btn" data-brand="Vivo">Vivo</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <!-- Список товаров -->
+        <div id="used-list" class="product-list"></div>
+    </section>
+
+    <!-- КОРЗИНА -->
+    <section class="page" id="page-cart">
+        <h1 class="page-title">Корзина</h1>
+
+        <div id="cart-list" class="cart-list"></div>
+
+        <div class="cart-summary">
+            <div class="cart-total-row">
+                <span>Итого к оплате:</span>
+                <span id="cart-total">0 ₽</span>
+            </div>
+            <button id="checkout-btn" class="primary-btn">Оформить заказ</button>
+            <p class="cart-hint">
+                После оформления я свяжусь с вами в Telegram для подтверждения заказа.
+            </p>
+        </div>
+    </section>
+
+    <!-- ПОДДЕРЖКА -->
+    <section class="page" id="page-support">
+        <h1 class="page-title">Поддержка</h1>
+
+        <div class="support-card">
+            <div class="support-icon">?</div>
+            <h2>Нужна помощь?</h2>
+            <p>Напишите мне по любому вопросу: подбор телефона, наличие, условия покупки.</p>
+
+            <!-- ЗДЕСЬ ВСТАВЬ СВОЙ @username -->
+            <a class="primary-btn" href="https://t.me/USERNAME" target="_blank">
+                Написать в Telegram
+            </a>
+
+            <!-- И СВОЙ НОМЕР -->
+            <p class="support-contact">
+                Телефон: <b>+7 XXX XXX-XX-XX</b>
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<!-- НИЖНЕЕ МЕНЮ -->
+<nav class="bottom-nav">
+    <button class="nav-btn active" data-page="new">
+        <span class="nav-icon">📱</span>
+        <span class="nav-label">Каталог новых</span>
+    </button>
+    <button class="nav-btn" data-page="used">
+        <span class="nav-icon">♻️</span>
+        <span class="nav-label">Каталог Б/У</span>
+    </button>
+    <button class="nav-btn" data-page="cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Корзина</span>
+    </button>
+    <button class="nav-btn" data-page="support">
+        <span class="nav-icon">❔</span>
+        <span class="nav-label">Поддержка</span>
+    </button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
