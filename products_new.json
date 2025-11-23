@@ -6,5 +6,13 @@
     "price": 18000,
     "image": "images/Iphone 17 Pro -1.jpg",
     "desc": "Новый"
+  },
+  {
+    "id": 1763936049,
+    "name": "Iphone 15",
+    "brand": "iPhone",
+    "price": 18000,
+    "image": "images/Iphone_15_1763936048.jpg",
+    "desc": "красивый"
   }
 ]
