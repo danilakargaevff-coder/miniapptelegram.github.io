@@ -5,71 +5,9 @@ if (tg) {
     document.body.classList.add("telegram");
 }
 
-// ДАННЫЕ ТОВАРОВ (пример, можешь менять под себя)
-const productsNew = [
-    {
-        id: 1,
-        name: "iPhone 15 128GB",
-        brand: "iPhone",
-        price: 70500,
-        desc: "Новый, запечатанный, гарантия",
-        image: "images/iphone15.jpg"
-    },
-    {
-        id: 2,
-        name: "Samsung S24 256GB",
-        brand: "Samsung",
-        price: 65000,
-        desc: "Официальная гарантия, есть в наличии",
-        image: "images/s24.jpg"
-    },
-    {
-        id: 3,
-        name: "Xiaomi 14 256GB",
-        brand: "Xiaomi",
-        price: 42000,
-        desc: "Глобальная версия, быстрая зарядка",
-        image: "images/xiaomi14.jpg"
-    },
-    {
-        id: 4,
-        name: "Honor Magic 6",
-        brand: "Honor",
-        price: 38000,
-        desc: "Новый, полный комплект",
-        image: "images/honor-magic6.jpg"
-    }
-];
-
-const productsUsed = [
-    {
-        id: 101,
-        name: "iPhone 13 128GB",
-        brand: "iPhone",
-        price: 38000,
-        desc: "Состояние 9/10, без сколов",
-        image: "images/iphone13-used.jpg",
-        state: "9/10"
-    },
-    {
-        id: 102,
-        name: "Samsung S21",
-        brand: "Samsung",
-        price: 28000,
-        desc: "Есть коробка и чек",
-        image: "images/s21-used.jpg",
-        state: "8/10"
-    },
-    {
-        id: 103,
-        name: "Xiaomi Redmi Note 11",
-        brand: "Xiaomi",
-        price: 12000,
-        desc: "Следы использования, всё работает",
-        image: "images/redmi11-used.jpg",
-        state: "7/10"
-    }
-];
+// Пустые массивы — заполним их из JSON
+let productsNew = [];
+let productsUsed = [];
 
 // КОРЗИНА
 let cart = [];
@@ -152,10 +90,6 @@ function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed
         price.className = "product-price";
         price.textContent = formatPrice(p.price);
 
-        const badge = document.createElement("div");
-        badge.className = "product-badge";
-        badge.textContent = isUsed ? "Б/У" : "Новый";
-
         const btn = document.createElement("button");
         btn.className = "add-btn";
         btn.innerHTML = "<span>Добавить</span>";
@@ -193,8 +127,6 @@ function addToCart(product, isUsed) {
         });
     }
     renderCart();
-    // можно заменить на красивый toast, пока alert
-    // alert("Товар добавлен в корзину");
 }
 
 // РЕНДЕР КОРЗИНЫ
@@ -279,15 +211,6 @@ function renderCart() {
     totalEl.textContent = formatPrice(total);
 }
 
-// ОБРАБОТЧИКИ ВКЛАДОК
-
-document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const page = btn.dataset.page;
-        showPage(page);
-    });
-});
-
 // ПОИСК И ФИЛЬТРЫ
 
 function setupCatalogControls() {
@@ -300,16 +223,20 @@ function setupCatalogControls() {
         renderCatalog("new-list", productsNew, searchNew.value, newBrand, false);
     }
 
-    searchNew.addEventListener("input", updateNew);
+    if (searchNew) {
+        searchNew.addEventListener("input", updateNew);
+    }
 
-    filterNewBlock.addEventListener("click", (e) => {
-        if (e.target.classList.contains("brand-btn")) {
-            filterNewBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-            e.target.classList.add("active");
-            newBrand = e.target.dataset.brand;
-            updateNew();
-        }
-    });
+    if (filterNewBlock) {
+        filterNewBlock.addEventListener("click", (e) => {
+            if (e.target.classList.contains("brand-btn")) {
+                filterNewBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                newBrand = e.target.dataset.brand;
+                updateNew();
+            }
+        });
+    }
 
     // Б/У
     const searchUsed = document.getElementById("search-used");
@@ -320,21 +247,54 @@ function setupCatalogControls() {
         renderCatalog("used-list", productsUsed, searchUsed.value, usedBrand, true);
     }
 
-    searchUsed.addEventListener("input", updateUsed);
+    if (searchUsed) {
+        searchUsed.addEventListener("input", updateUsed);
+    }
 
-    filterUsedBlock.addEventListener("click", (e) => {
-        if (e.target.classList.contains("brand-btn")) {
-            filterUsedBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-            e.target.classList.add("active");
-            usedBrand = e.target.dataset.brand;
-            updateUsed();
-        }
-    });
+    if (filterUsedBlock) {
+        filterUsedBlock.addEventListener("click", (e) => {
+            if (e.target.classList.contains("brand-btn")) {
+                filterUsedBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                usedBrand = e.target.dataset.brand;
+                updateUsed();
+            }
+        });
+    }
 
     // начальный рендер
     updateNew();
     updateUsed();
 }
+
+// ЗАГРУЗКА ТОВАРОВ ИЗ JSON
+
+async function loadProducts() {
+    try {
+        const [newRes, usedRes] = await Promise.all([
+            fetch("products_new.json"),
+            fetch("products_used.json")
+        ]);
+
+        productsNew = await newRes.json();
+        productsUsed = await usedRes.json();
+    } catch (e) {
+        console.error("Ошибка загрузки товаров", e);
+        productsNew = [];
+        productsUsed = [];
+    }
+
+    setupCatalogControls();
+}
+
+// ОБРАБОТЧИКИ ВКЛАДОК
+
+document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const page = btn.dataset.page;
+        showPage(page);
+    });
+});
 
 // ОФОРМЛЕНИЕ ЗАКАЗА
 
@@ -360,4 +320,4 @@ if (checkoutBtn) {
 
 // Запуск
 showPage("new");      // при старте – каталог новых
-setupCatalogControls();
+loadProducts();
