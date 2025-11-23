@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин техники</title>
 
-    <!-- Скрипт Telegram WebApp (оставляем на будущее) -->
+    <!-- Скрипт Telegram WebApp -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <link rel="stylesheet" href="style.css">
@@ -14,78 +14,31 @@
 
 <div id="app">
 
-    <!-- Страница: Каталог Б/У -->
-    <section class="page" id="page-used">
-        <h2>Каталог Б/У телефонов</h2>
-
-        <!-- Пример карточки товара (Б/У). Ты можешь копировать и менять данные -->
-        <div class="product-card">
-            <img src="images/iphone12.jpg" alt="iPhone 12">
-            <div class="info">
-                <div class="title">iPhone 12 128GB</div>
-                <div class="desc">Состояние: 8/10, без сколов, полный комплект.</div>
-                <div class="price">45 000 ₽</div>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="images/s21.jpg" alt="Samsung S21">
-            <div class="info">
-                <div class="title">Samsung S21</div>
-                <div class="desc">Отличное состояние, есть чек, работает всё.</div>
-                <div class="price">38 000 ₽</div>
-            </div>
-        </div>
-
-        <!-- Сюда дальше добавляй свои карточки -->
-    </section>
-
-    <!-- Страница: Новые телефоны -->
+    <!-- КАТАЛОГ НОВЫХ -->
     <section class="page" id="page-new">
-        <h2>Каталог новых телефонов</h2>
+        <h1 class="page-title">Каталог новых</h1>
 
-        <!-- Здесь можно просто прайс-список -->
-        <ul class="price-list">
-            <li><b>iPhone 15 128GB</b> — 90 000 ₽</li>
-            <li><b>Samsung S24</b> — 80 000 ₽</li>
-            <li><b>Xiaomi 14</b> — 45 000 ₽</li>
-            <!-- Добавляй свои позиции -->
-        </ul>
+        <!-- Поисковая строка -->
+        <div class="search-bar">
+            <input id="search-new" type="text" placeholder="Поиск по новым товарам">
+        </div>
+
+        <!-- Фильтры брендов -->
+        <div class="brand-filters" id="brand-filters-new">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="Honor">Honor</button>
+            <button class="brand-btn" data-brand="Realme">Realme</button>
+            <button class="brand-btn" data-brand="Vivo">Vivo</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <!-- Список товаров -->
+        <div id="new-list" class="product-list"></div>
     </section>
 
-    <!-- Страница: Корзина (пока простая, без сложной логики) -->
-    <section class="page" id="page-cart">
-        <h2>Корзина</h2>
-        <p>Пока оформление заказов происходит через переписку.</p>
-        <p>Выберите товары в каталоге и напишите мне в поддержку, указав модель и цену.</p>
-    </section>
-
-    <!-- Страница: Поддержка -->
-    <section class="page" id="page-support">
-        <h2>Поддержка</h2>
-        <p>Нужна помощь или хотите оформить заказ?</p>
-
-        <!-- ВАЖНО: здесь вставь свой @username -->
-        <a class="support-btn" href="https://t.me/USERNAME" target="_blank">
-            Написать в Telegram
-        </a>
-
-        <!-- Здесь вставь свой телефон -->
-        <p>Телефон: <b>+7 XXX XXX XX XX</b></p>
-
-        <!-- Можно добавить ещё: адрес, режим работы и т.п. -->
-    </section>
-
-</div>
-
-<!-- Нижнее меню с вкладками -->
-<nav class="bottom-nav">
-    <button class="nav-btn active" data-page="used">Б/У</button>
-    <button class="nav-btn" data-page="new">Новые</button>
-    <button class="nav-btn" data-page="cart">Корзина</button>
-    <button class="nav-btn" data-page="support">Поддержка</button>
-</nav>
-
-<script src="app.js"></script>
-</body>
-</html>
+    <!-- КАТАЛОГ Б/У -->
+    <section class="page" id="page-used">
+        <h1 class="page-title">Каталог Б/У</h1>
