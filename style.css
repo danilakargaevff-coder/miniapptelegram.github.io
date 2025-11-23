@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--tg-theme-bg-color, #f5f5f5);
+    color: var(--tg-theme-text-color, #000);
+}
+
+/* Чтобы контент не прятался под нижним меню */
+#app {
+    padding-bottom: 70px;
+}
+
+.page {
+    padding: 15px;
+    display: none; /* по умолчанию скрыты, кроме активной */
+}
+
+.page h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Карточка товара */
+.product-card {
+    background: var(--tg-theme-secondary-bg-color, #ffffff);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.product-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-card .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card .title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.product-card .desc {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.product-card .price {
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+/* Прайс-лист для новых */
+.price-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.price-list li {
+    background: var(--tg-theme-secondary-bg-color, #ffffff);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+/* Нижнее меню */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--tg-theme-bg-color, #f5f5f5);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+}
+
+.nav-btn {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nav-btn.active {
+    border-top: 3px solid var(--tg-theme-button-color, #2a8cff);
+}
+
+/* Кнопка поддержки */
+.support-btn {
+    display: block;
+    padding: 12px;
+    background: var(--tg-theme-button-color, #2a8cff);
+    color: var(--tg-theme-button-text-color, #fff);
+    border-radius: 10px;
+    margin: 15px 0;
+    text-align: center;
+    text-decoration: none;
+}
