@@ -396,12 +396,16 @@ if (submitOrderBtn) {
             address,
             comment
         };
+if (tg) {
+    tg.sendData(JSON.stringify(payload));
 
-        if (tg) {
-            tg.sendData(JSON.stringify(payload));
-        } else {
-            alert("Для теста:\n" + JSON.stringify(payload, null, 2));
-        }
+    // 🔥 ТЕСТ: проверяем, что sendData сработал
+    console.log("SEND DATA:", payload);
+    alert("sendData выполнен! (WebApp работает)");
+} else {
+    alert("Для теста:\n" + JSON.stringify(payload, null, 2));
+}
+
 
         cart = [];
         renderCart();
