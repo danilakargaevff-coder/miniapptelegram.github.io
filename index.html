@@ -1,26 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <title>Моё мини-приложение</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Подключаем Telegram Web App API -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body { padding: 20px; font-family: sans-serif; }
-    button { padding: 12px 20px; font-size: 16px; background: #0088cc; color: white; border: none; border-radius: 8px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин техники</title>
+
+    <!-- Скрипт Telegram WebApp (оставляем на будущее) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Привет, Данил!</h1>
-  <p>Ты в мини-приложении в Telegram!</p>
-  <button onclick="Telegram.WebApp.close()">Закрыть</button>
 
-  <script>
-    // Получаем данные пользователя (если нужно)
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // Расширяет окно
-    // tg.ready(); // Раскомментируй, если приложение готово к работе
-  </script>
+<div id="app">
+
+    <!-- Страница: Каталог Б/У -->
+    <section class="page" id="page-used">
+        <h2>Каталог Б/У телефонов</h2>
+
+        <!-- Пример карточки товара (Б/У). Ты можешь копировать и менять данные -->
+        <div class="product-card">
+            <img src="images/iphone12.jpg" alt="iPhone 12">
+            <div class="info">
+                <div class="title">iPhone 12 128GB</div>
+                <div class="desc">Состояние: 8/10, без сколов, полный комплект.</div>
+                <div class="price">45 000 ₽</div>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="images/s21.jpg" alt="Samsung S21">
+            <div class="info">
+                <div class="title">Samsung S21</div>
+                <div class="desc">Отличное состояние, есть чек, работает всё.</div>
+                <div class="price">38 000 ₽</div>
+            </div>
+        </div>
+
+        <!-- Сюда дальше добавляй свои карточки -->
+    </section>
+
+    <!-- Страница: Новые телефоны -->
+    <section class="page" id="page-new">
+        <h2>Каталог новых телефонов</h2>
+
+        <!-- Здесь можно просто прайс-список -->
+        <ul class="price-list">
+            <li><b>iPhone 15 128GB</b> — 90 000 ₽</li>
+            <li><b>Samsung S24</b> — 80 000 ₽</li>
+            <li><b>Xiaomi 14</b> — 45 000 ₽</li>
+            <!-- Добавляй свои позиции -->
+        </ul>
+    </section>
+
+    <!-- Страница: Корзина (пока простая, без сложной логики) -->
+    <section class="page" id="page-cart">
+        <h2>Корзина</h2>
+        <p>Пока оформление заказов происходит через переписку.</p>
+        <p>Выберите товары в каталоге и напишите мне в поддержку, указав модель и цену.</p>
+    </section>
+
+    <!-- Страница: Поддержка -->
+    <section class="page" id="page-support">
+        <h2>Поддержка</h2>
+        <p>Нужна помощь или хотите оформить заказ?</p>
+
+        <!-- ВАЖНО: здесь вставь свой @username -->
+        <a class="support-btn" href="https://t.me/USERNAME" target="_blank">
+            Написать в Telegram
+        </a>
+
+        <!-- Здесь вставь свой телефон -->
+        <p>Телефон: <b>+7 XXX XXX XX XX</b></p>
+
+        <!-- Можно добавить ещё: адрес, режим работы и т.п. -->
+    </section>
+
+</div>
+
+<!-- Нижнее меню с вкладками -->
+<nav class="bottom-nav">
+    <button class="nav-btn active" data-page="used">Б/У</button>
+    <button class="nav-btn" data-page="new">Новые</button>
+    <button class="nav-btn" data-page="cart">Корзина</button>
+    <button class="nav-btn" data-page="support">Поддержка</button>
+</nav>
+
+<script src="app.js"></script>
 </body>
 </html>
+
