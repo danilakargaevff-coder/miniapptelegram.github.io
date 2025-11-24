@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин техники</title>
+
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <!-- КАТАЛОГ НОВЫХ -->
+    <section class="page" id="page-new">
+        <h1 class="page-title">Каталог новых</h1>
+
+        <!-- Поиск -->
+        <div class="search-bar">
+            <input id="search-new" type="text" placeholder="Поиск по новым товарам">
+        </div>
+
+        <!-- Фильтры брендов -->
+        <div class="brand-filters" id="brand-filters-new">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="Honor">Honor</button>
+            <button class="brand-btn" data-brand="Realme">Realme</button>
+            <button class="brand-btn" data-brand="Vivo">Vivo</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <!-- Список товаров -->
+        <div id="new-list" class="product-list"></div>
+    </section>
+
+    <!-- КАТАЛОГ Б/У -->
+    <section class="page" id="page-used">
+        <h1 class="page-title">Каталог Б/У</h1>
+
+        <!-- Поиск -->
+        <div class="search-bar">
+            <input id="search-used" type="text" placeholder="Поиск по Б/У товарам">
+        </div>
+
+        <!-- Фильтры брендов -->
+        <div class="brand-filters" id="brand-filters-used">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="Honor">Honor</button>
+            <button class="brand-btn" data-brand="Realme">Realme</button>
+            <button class="brand-btn" data-brand="Vivo">Vivo</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <!-- Список товаров -->
+        <div id="used-list" class="product-list"></div>
+    </section>
+
+    <!-- КОРЗИНА -->
+    <section class="page" id="page-cart">
+        <h1 class="page-title">Корзина</h1>
+
+        <div id="cart-list" class="cart-list"></div>
+
+        <div class="cart-summary">
+            <div class="cart-total-row">
+                <span>Итого к оплате:</span>
+                <span id="cart-total">0 ₽</span>
+            </div>
+            <button id="checkout-btn" class="primary-btn">Оформить заказ</button>
+            <p class="cart-hint">
+                На следующем шаге вы сможете указать имя, телефон, способ доставки и адрес.
+            </p>
+        </div>
+    </section>
+
+    <!-- ОФОРМЛЕНИЕ ЗАКАЗА -->
+    <section class="page" id="page-checkout">
+        <h1 class="page-title">Оформление заказа</h1>
+
+        <div class="checkout-summary">
+            <div class="checkout-row">
+                <span>Сумма товаров</span>
+                <span id="checkout-products-sum">0 ₽</span>
+            </div>
+            <div class="checkout-row">
+                <span>Доставка</span>
+                <span id="checkout-delivery-sum">0 ₽</span>
+            </div>
+            <div class="checkout-row checkout-row-total">
+                <span>Итого</span>
+                <span id="checkout-total-sum">0 ₽</span>
+            </div>
+        </div>
+
+        <div class="checkout-form">
+            <label>
+                Имя
+                <input id="order-name" type="text" placeholder="Как к вам обращаться">
+            </label>
+
+            <label>
+                Телефон
+                <input id="order-phone" type="tel" placeholder="+7 9XX XXX-XX-XX">
+            </label>
+
+            <label>
+                Способ связи
+                <select id="order-contact-method">
+                    <option value="Telegram">Telegram</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Звонок">Звонок</option>
+                </select>
+            </label>
+
+            <label>
+                Способ доставки
+                <select id="order-delivery-type">
+                    <option value="Самовывоз">Самовывоз</option>
+                    <option value="Курьер">Курьер</option>
+                    <option value="ТК / Почта">ТК / Почта</option>
+                </select>
+            </label>
+
+            <label>
+                Стоимость доставки (₽)
+                <input id="order-delivery-cost" type="number" min="0" value="0">
+            </label>
+
+            <label>
+                Адрес (если нужна доставка)
+                <textarea id="order-address" rows="2" placeholder="Город, улица, дом, подъезд..."></textarea>
+            </label>
+
+            <label>
+                Комментарий к заказу
+                <textarea id="order-comment" rows="2" placeholder="Например: позвонить за 30 минут до приезда"></textarea>
+            </label>
+        </div>
+
+        <button id="submit-order-btn" class="primary-btn">Отправить заказ</button>
+        <p class="checkout-hint">
+            После отправки заказа мы свяжемся с вами в Telegram для подтверждения деталей.
+        </p>
+    </section>
+
+    <!-- ПОДДЕРЖКА -->
+    <section class="page" id="page-support">
+        <h1 class="page-title">Поддержка</h1>
+
+        <div class="support-card">
+            <div class="support-icon">?</div>
+            <h2>Нужна помощь?</h2>
+            <p>Напишите по любым вопросам: подбор модели, наличие, условия покупки.</p>
+
+            <!-- ЗДЕСЬ ВСТАВЬ СВОЙ username -->
+            <a class="primary-btn" href="https://t.me/USERNAME" target="_blank">
+                Написать в Telegram
+            </a>
+
+            <!-- И СВОЙ НОМЕР -->
+            <p class="support-contact">
+                Телефон: <b>+7 XXX XXX-XX-XX</b>
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<!-- НИЖНЕЕ МЕНЮ -->
+<nav class="bottom-nav">
+    <button class="nav-btn active" data-page="new">
+        <span class="nav-icon">📱</span>
+        <span class="nav-label">Каталог новых</span>
+    </button>
+    <button class="nav-btn" data-page="used">
+        <span class="nav-icon">♻️</span>
+        <span class="nav-label">Каталог Б/У</span>
+    </button>
+    <button class="nav-btn" data-page="cart">
+        <span class="nav-icon nav-icon-cart">
+            🛒
+            <span id="cart-badge" class="cart-badge">0</span>
+        </span>
+        <span class="nav-label">Корзина</span>
+    </button>
+    <button class="nav-btn" data-page="support">
+        <span class="nav-icon">❔</span>
+        <span class="nav-label">Поддержка</span>
+    </button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
