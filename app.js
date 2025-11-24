@@ -1,122 +1,70 @@
-// ---------------------------------------------------------
-// Telegram WebApp API
-// ---------------------------------------------------------
-const tg = window.Telegram ? window.Telegram.WebApp : null;
+// ==============================
+//  Telegram WebApp API
+// ==============================
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-if (tg) {
-    tg.expand();
-    document.body.classList.add("telegram");
-}
-
-// ---------------------------------------------------------
-// Глобальные переменные
-// ---------------------------------------------------------
+// ==============================
+//  Глобальные переменные
+// ==============================
 let productsNew = [];
 let productsUsed = [];
 let cart = [];
 
-// ---------------------------------------------------------
-// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-// ---------------------------------------------------------
-function showPage(pageName) {
+// ==============================
+//  Переход между страницами
+// ==============================
+function showPage(name) {
     document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-    const page = document.getElementById("page-" + pageName);
-    if (page) page.style.display = "block";
+    document.getElementById("page-" + name).style.display = "block";
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.page === name);
+    });
+
+    if (name === "cart") renderCart();
 }
 
-function formatPrice(num) {
-    num = Number(num) || 0;
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽";
+// ==============================
+//  Форматирование цен
+// ==============================
+function formatPrice(n) {
+    n = Number(n) || 0;
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽";
 }
 
+// ==============================
+//  Корзина
+// ==============================
 function getCartTotal() {
-    return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    return cart.reduce((s, i) => s + i.price * i.qty, 0);
 }
 
 function getCartCount() {
-    return cart.reduce((sum, item) => sum + item.qty, 0);
+    return cart.reduce((s, i) => s + i.qty, 0);
 }
 
 function updateCartBadge() {
     const badge = document.getElementById("cart-badge");
-    if (!badge) return;
-    const count = getCartCount();
-    if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = "inline-flex";
-    } else {
-        badge.style.display = "none";
-    }
+    const c = getCartCount();
+    badge.textContent = c;
+    badge.style.display = c > 0 ? "inline-flex" : "none";
 }
 
-// ---------------------------------------------------------
-// КАТАЛОГ ТОВАРОВ
-// ---------------------------------------------------------
-function renderCatalog(listElementId, items, searchValue, brandFilter, isUsed) {
-    const listEl = document.getElementById(listElementId);
-    listEl.innerHTML = "";
-
-    const query = (searchValue || "").toLowerCase();
-    const brand = brandFilter || "all";
-
-    const filtered = items.filter(p => {
-        const matchesName = p.name.toLowerCase().includes(query);
-        const matchesBrand =
-            brand === "all" ? true :
-            brand === "other"
-                ? !["iPhone", "Samsung", "Xiaomi", "Honor", "Realme", "Vivo"].includes(p.brand)
-                : p.brand === brand;
-
-        return matchesName && matchesBrand;
+function addToCart(p, isUsed) {
+    const ex = cart.find(i => i.id === p.id);
+    if (ex) ex.qty++;
+    else cart.push({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price),
+        qty: 1,
+        isUsed,
+        brand: p.brand
     });
 
-    if (!filtered.length) {
-        listEl.innerHTML = "<p style='font-size:13px;color:#6b7280;'>Ничего не найдено.</p>";
-        return;
-    }
-
-    filtered.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-
-        card.innerHTML = `
-            <img src="${p.image}" class="product-image">
-            <div class="product-info">
-                <div class="product-name">${p.name}</div>
-                <div class="product-meta">${isUsed ? "Б/У" : (p.desc || "")}</div>
-                <div class="product-bottom">
-                    <div class="product-price">${formatPrice(p.price)}</div>
-                    <button class="add-btn">Добавить</button>
-                </div>
-            </div>
-        `;
-
-        card.querySelector(".add-btn").addEventListener("click", () => addToCart(p, isUsed));
-        listEl.appendChild(card);
-    });
-}
-
-// ---------------------------------------------------------
-// КОРЗИНА
-// ---------------------------------------------------------
-function addToCart(product, isUsed) {
-    const existing = cart.find(i => i.id === product.id);
-
-    if (existing) {
-        existing.qty++;
-    } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: Number(product.price) || 0,
-            qty: 1,
-            brand: product.brand,
-            isUsed: !!isUsed
-        });
-    }
-
-    renderCart();
     updateCartBadge();
+    renderCart();
 }
 
 function renderCart() {
@@ -124,9 +72,11 @@ function renderCart() {
     const totalEl = document.getElementById("cart-total");
 
     list.innerHTML = "";
-    if (!cart.length) {
-        list.innerHTML = "<p style='font-size:13px;color:#6b7280;'>Корзина пуста</p>";
+
+    if (cart.length === 0) {
+        list.innerHTML = "<p style='color:#666'>Корзина пока пуста.</p>";
         totalEl.textContent = "0 ₽";
+        updateCartBadge();
         return;
     }
 
@@ -149,18 +99,18 @@ function renderCart() {
             </div>
         `;
 
-        row.querySelector(".minus").onclick = () => {
+        row.querySelector(".minus").addEventListener("click", () => {
             item.qty--;
-            if (!item.qty) cart = cart.filter(i => i.id !== item.id);
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== item.id);
             renderCart();
             updateCartBadge();
-        };
+        });
 
-        row.querySelector(".plus").onclick = () => {
+        row.querySelector(".plus").addEventListener("click", () => {
             item.qty++;
             renderCart();
             updateCartBadge();
-        };
+        });
 
         list.appendChild(row);
     });
@@ -168,12 +118,100 @@ function renderCart() {
     totalEl.textContent = formatPrice(getCartTotal());
 }
 
-// ---------------------------------------------------------
-// ОФОРМЛЕНИЕ ЗАКАЗА
-// ---------------------------------------------------------
-document.getElementById("checkout-btn")?.addEventListener("click", () => {
-    if (!cart.length) {
-        alert("Корзина пуста");
+// ==============================
+//  Каталоги
+// ==============================
+function renderCatalog(id, arr, query, brand, isUsed) {
+    const list = document.getElementById(id);
+    list.innerHTML = "";
+
+    query = query.toLowerCase();
+
+    const filtered = arr.filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(query);
+        const matchBrand =
+            brand === "all"
+                ? true
+                : brand === "other"
+                    ? !["iPhone","Samsung","Xiaomi","Honor","Realme","Vivo"].includes(p.brand)
+                    : p.brand === brand;
+
+        return matchSearch && matchBrand;
+    });
+
+    filtered.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+            <img class="product-image" src="${p.image}">
+            <div class="product-info">
+                <div class="product-name">${p.name}</div>
+                <div class="product-meta">${isUsed ? (p.state || p.desc || "Б/У") : (p.desc || "")}</div>
+                <div class="product-bottom">
+                    <div class="product-price">${formatPrice(p.price)}</div>
+                    <button class="add-btn"><span>Добавить</span></button>
+                </div>
+            </div>
+        `;
+
+        card.querySelector(".add-btn").addEventListener("click", () => addToCart(p, isUsed));
+
+        list.appendChild(card);
+    });
+}
+
+function setupCatalogControls() {
+    // Новые
+    const searchNew = document.getElementById("search-new");
+    const filtersNew = document.getElementById("brand-filters-new");
+    let brandNew = "all";
+
+    function update() {
+        renderCatalog("new-list", productsNew, searchNew.value, brandNew, false);
+    }
+
+    searchNew.addEventListener("input", update);
+
+    filtersNew.addEventListener("click", e => {
+        if (e.target.classList.contains("brand-btn")) {
+            filtersNew.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+            e.target.classList.add("active");
+            brandNew = e.target.dataset.brand;
+            update();
+        }
+    });
+
+    // Б/У
+    const searchUsed = document.getElementById("search-used");
+    const filtersUsed = document.getElementById("brand-filters-used");
+    let brandUsed = "all";
+
+    function updateUsed() {
+        renderCatalog("used-list", productsUsed, searchUsed.value, brandUsed, true);
+    }
+
+    searchUsed.addEventListener("input", updateUsed);
+
+    filtersUsed.addEventListener("click", e => {
+        if (e.target.classList.contains("brand-btn")) {
+            filtersUsed.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+            e.target.classList.add("active");
+            brandUsed = e.target.dataset.brand;
+            updateUsed();
+        }
+    });
+
+    update();
+    updateUsed();
+}
+
+// ==============================
+//  Оформление заказа
+// ==============================
+document.getElementById("checkout-btn").addEventListener("click", () => {
+    if (cart.length === 0) {
+        tg.showAlert("Корзина пуста");
         return;
     }
     recalcCheckoutTotals();
@@ -181,22 +219,19 @@ document.getElementById("checkout-btn")?.addEventListener("click", () => {
 });
 
 function recalcCheckoutTotals() {
-    const products = getCartTotal();
-    const delivery = parseInt((document.getElementById("order-delivery-cost").value || "0").replace(/\s/g, "")) || 0;
+    const goods = getCartTotal();
+    const del = Number(document.getElementById("order-delivery-cost").value || 0);
 
-    document.getElementById("checkout-products-sum").textContent = formatPrice(products);
-    document.getElementById("checkout-delivery-sum").textContent = formatPrice(delivery);
-    document.getElementById("checkout-total-sum").textContent = formatPrice(products + delivery);
+    document.getElementById("checkout-products-sum").textContent = formatPrice(goods);
+    document.getElementById("checkout-delivery-sum").textContent = formatPrice(del);
+    document.getElementById("checkout-total-sum").textContent = formatPrice(goods + del);
 }
 
-document.getElementById("order-delivery-cost")?.addEventListener("input", recalcCheckoutTotals);
+document.getElementById("order-delivery-cost").addEventListener("input", recalcCheckoutTotals);
 
-// ---------------------------------------------------------
-// ОТПРАВКА ЗАКАЗА В TELEGRAM
-// ---------------------------------------------------------
-document.getElementById("submit-order-btn")?.addEventListener("click", () => {
-    if (!cart.length) {
-        alert("Корзина пуста");
+document.getElementById("submit-order-btn").addEventListener("click", () => {
+    if (cart.length === 0) {
+        tg.showAlert("Корзина пуста");
         return;
     }
 
@@ -204,68 +239,42 @@ document.getElementById("submit-order-btn")?.addEventListener("click", () => {
     const phone = document.getElementById("order-phone").value.trim();
 
     if (!name || !phone) {
-        alert("Введите имя и телефон");
+        tg.showAlert("Укажите имя и телефон");
         return;
     }
 
     const payload = {
-        items: cart.map(i => ({
-            name: i.name,
-            qty: i.qty,
-            price: i.price,
-            brand: i.brand,
-            isUsed: i.isUsed
-        })),
+        items: cart,
         total: getCartTotal(),
         name,
         phone,
         contact_method: document.getElementById("order-contact-method").value,
         delivery_type: document.getElementById("order-delivery-type").value,
-        delivery_cost: parseInt((document.getElementById("order-delivery-cost").value || 0)) || 0,
+        delivery_cost: Number(document.getElementById("order-delivery-cost").value || 0),
         address: document.getElementById("order-address").value.trim(),
         comment: document.getElementById("order-comment").value.trim()
     };
 
-    if (tg) {
-        tg.sendData(JSON.stringify(payload));
-
-        console.log("SEND DATA:", payload);
-        alert("sendData выполнен! WebApp → бот OK");
-    }
-
-    cart = [];
-    renderCart();
-    updateCartBadge();
-    showPage("new");
-    alert("Заказ отправлен 🙌");
+    tg.sendData(JSON.stringify(payload));
+    tg.close();
 });
 
-// ---------------------------------------------------------
-// НАВИГАЦИЯ И СТАРТ
-// ---------------------------------------------------------
+// ==============================
+//  Навигация
+// ==============================
 document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.onclick = () => showPage(btn.dataset.page);
+    btn.addEventListener("click", () => showPage(btn.dataset.page));
 });
+
+// ==============================
+//  Старт
+// ==============================
+async function loadProducts() {
+    productsNew = await (await fetch("products_new.json")).json();
+    productsUsed = await (await fetch("products_used.json")).json();
+    setupCatalogControls();
+}
 
 showPage("new");
 loadProducts();
 updateCartBadge();
-
-// ---------------------------------------------------------
-// ЗАГРУЗКА JSON ТОВАРОВ
-// ---------------------------------------------------------
-async function loadProducts() {
-    try {
-        const [n, u] = await Promise.all([
-            fetch("products_new.json"),
-            fetch("products_used.json")
-        ]);
-        productsNew = await n.json();
-        productsUsed = await u.json();
-    } catch (e) {
-        console.error("Ошибка загрузки JSON", e);
-    }
-
-    renderCatalog("new-list", productsNew, "", "all", false);
-    renderCatalog("used-list", productsUsed, "", "all", true);
-}
