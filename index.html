@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+    <!-- КАТАЛОГ НОВЫХ -->
+    <div class="page" id="page-new">
+        <div class="top-title">Каталог новых</div>
+        <input id="search-new" class="search" placeholder="Поиск...">
+
+        <div class="brands" id="brand-filters-new">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <div id="new-list"></div>
+    </div>
+
+    <!-- КАТАЛОГ Б/У -->
+    <div class="page" id="page-used" style="display:none;">
+        <div class="top-title">Каталог Б/У</div>
+        <input id="search-used" class="search" placeholder="Поиск...">
+
+        <div class="brands" id="brand-filters-used">
+            <button class="brand-btn active" data-brand="all">Все</button>
+            <button class="brand-btn" data-brand="iPhone">iPhone</button>
+            <button class="brand-btn" data-brand="Samsung">Samsung</button>
+            <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
+            <button class="brand-btn" data-brand="other">Другое</button>
+        </div>
+
+        <div id="used-list"></div>
+    </div>
+
+    <!-- КОРЗИНА -->
+    <div class="page" id="page-cart" style="display:none;">
+        <div class="top-title">Корзина</div>
+        <div id="cart-list"></div>
+
+        <div class="cart-footer">
+            <div class="total-block">
+                Итого: <span id="cart-total">0 ₽</span>
+            </div>
+            <button id="checkout-btn" class="checkout-btn">Оформить заказ</button>
+        </div>
+    </div>
+
+    <!-- СТРАНИЦА ОФОРМЛЕНИЯ -->
+    <div class="page" id="page-checkout" style="display:none;">
+        <div class="top-title">Оформление заказа</div>
+
+        <div class="form-block">
+            <label>Имя</label>
+            <input id="order-name">
+
+            <label>Телефон</label>
+            <input id="order-phone" placeholder="+7...">
+
+            <label>Способ связи</label>
+            <select id="order-contact-method">
+                <option value="Телефон">Телефон</option>
+                <option value="Telegram">Telegram</option>
+                <option value="WhatsApp">WhatsApp</option>
+            </select>
+
+            <label>Способ получения</label>
+            <select id="order-delivery-type">
+                <option value="Курьер">Курьером</option>
+                <option value="Самовывоз">В магазине</option>
+            </select>
+
+            <label>Вариант доставки</label>
+
+            <div class="delivery-option" data-cost="1000">
+                🚚 Доставка по Москве — от 1000₽
+            </div>
+
+            <div class="delivery-option" data-cost="500">
+                📦 В другой город (СДЭК) — от 500₽
+            </div>
+
+            <label>Адрес доставки</label>
+            <input id="order-address">
+
+            <label>Комментарий</label>
+            <textarea id="order-comment"></textarea>
+
+            <div class="checkout-summary">
+                <div>Товары: <span id="checkout-products-sum">0 ₽</span></div>
+                <div>Доставка: <span id="checkout-delivery-sum">0 ₽</span></div>
+                <div class="checkout-total">ИТОГО: <span id="checkout-total-sum">0 ₽</span></div>
+            </div>
+
+            <button id="submit-order-btn" class="submit-btn">Отправить</button>
+        </div>
+    </div>
+
+    <!-- ПОДДЕРЖКА -->
+    <div class="page" id="page-support" style="display:none;">
+        <div class="top-title">Поддержка</div>
+        <div class="support-box">
+            <p>Если возникли вопросы или нужны уточнения — пишите!</p>
+            <a class="support-btn" href="https://t.me/remontqq">Написать в поддержку</a>
+        </div>
+    </div>
+
+    <!-- НАВИГАЦИЯ -->
+    <div class="nav">
+        <div class="nav-btn active" data-page="new">Каталог</div>
+        <div class="nav-btn" data-page="used">Б/У</div>
+        <div class="nav-btn" data-page="cart">
+            Корзина
+            <span id="cart-badge" class="badge"></span>
+        </div>
+        <div class="nav-btn" data-page="support">Поддержка</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
