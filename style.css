@@ -1,0 +1,268 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif;
+    background: #f3f4f6;
+    color: #111;
+}
+
+.page {
+    padding: 16px;
+    padding-bottom: 120px;
+}
+
+.top-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.search {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.brands {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.brand-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #e5e7eb;
+    border: none;
+    white-space: nowrap;
+}
+
+.brand-btn.active {
+    background: #2563eb;
+    color: #fff;
+}
+
+/* --- PRODUCT CARD --- */
+
+.product-card {
+    display: flex;
+    background: #fff;
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.product-info {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-weight: 600;
+}
+
+.product-meta {
+    color: #666;
+    margin: 3px 0 8px;
+}
+
+.product-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-price {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.add-btn {
+    background: #2563eb;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    padding: 8px 10px;
+}
+
+/* Cart */
+
+.cart-item {
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+}
+
+.cart-item-info {
+    width: 100%;
+}
+
+.cart-item-name {
+    font-weight: 600;
+}
+
+.cart-item-meta {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.cart-item-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cart-qty button {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: #e5e7eb;
+    font-size: 18px;
+}
+
+.checkout-btn {
+    width: 100%;
+    background: #2563eb;
+    color: #fff;
+    padding: 14px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+}
+
+/* Checkout */
+
+.form-block {
+    background: #fff;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.form-block label {
+    font-weight: 600;
+    display: block;
+    margin-top: 12px;
+}
+
+.form-block input,
+.form-block select,
+.form-block textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+}
+
+.delivery-option {
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    margin-top: 10px;
+    background: #f9fafb;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.delivery-option.active {
+    border: 2px solid #2563eb;
+    background: #eef4ff;
+}
+
+.checkout-summary {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.checkout-total {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.submit-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    background: #16a34a;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    font-size: 17px;
+}
+
+/* Support */
+
+.support-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.support-btn {
+    display: block;
+    margin-top: 15px;
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Navigation */
+
+.nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+}
+
+.nav-btn {
+    text-align: center;
+    font-size: 14px;
+}
+
+.nav-btn.active {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.badge {
+    background: #ef4444;
+    color: white;
+    padding: 2px 6px;
+    font-size: 11px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
