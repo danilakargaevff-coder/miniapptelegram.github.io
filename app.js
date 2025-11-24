@@ -1,16 +1,20 @@
-// Telegram WebApp
+// Telegram WebApp API
 let tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) {
     tg.expand();
     document.body.classList.add("telegram");
 }
 
+// ---------------------------
+//   ПЕРЕМЕННЫЕ
+// ---------------------------
 let productsNew = [];
 let productsUsed = [];
 let cart = [];
 
-// ----- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ -----
-
+// ---------------------------
+//   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// ---------------------------
 function showPage(pageName) {
     document.querySelectorAll(".page").forEach(p => p.style.display = "none");
     const page = document.getElementById("page-" + pageName);
@@ -50,8 +54,9 @@ function updateCartBadge() {
     }
 }
 
-// ----- РИСОВАНИЕ КАТАЛОГОВ -----
-
+// ---------------------------
+//   РЕНДЕР КАТАЛОГА
+// ---------------------------
 function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed) {
     const listEl = document.getElementById(listElementId);
     listEl.innerHTML = "";
@@ -61,6 +66,7 @@ function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed
 
     const filtered = products.filter(p => {
         const matchesSearch = p.name.toLowerCase().includes(query);
+
         const matchesBrand =
             brand === "all"
                 ? true
@@ -71,9 +77,9 @@ function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed
         return matchesSearch && matchesBrand;
     });
 
-    if (filtered.length === 0) {
+    if (!filtered.length) {
         const empty = document.createElement("p");
-        empty.textContent = "Ничего не найдено. Попробуйте изменить запрос или фильтр.";
+        empty.textContent = "Ничего не найдено";
         empty.style.fontSize = "13px";
         empty.style.color = "#6b7280";
         listEl.appendChild(empty);
@@ -99,8 +105,8 @@ function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed
         const meta = document.createElement("div");
         meta.className = "product-meta";
         meta.textContent = isUsed
-            ? (p.state ? `Состояние: ${p.state}` : (p.desc || "Б/У"))
-            : (p.desc || "");
+            ? (p.state ?? "Б/У")
+            : (p.desc ?? "");
 
         const bottom = document.createElement("div");
         bottom.className = "product-bottom";
@@ -129,22 +135,25 @@ function renderCatalog(listElementId, products, searchValue, brandFilter, isUsed
     });
 }
 
-// ----- КОРЗИНА -----
-
+// ---------------------------
+//   КОРЗИНА
+// ---------------------------
 function addToCart(product, isUsed) {
-    const existing = cart.find(item => item.id === product.id);
+    const existing = cart.find(i => i.id === product.id);
+
     if (existing) {
-        existing.qty += 1;
+        existing.qty++;
     } else {
         cart.push({
             id: product.id,
             name: product.name,
+            qty: 1,
             price: Number(product.price) || 0,
             brand: product.brand,
-            isUsed: !!isUsed,
-            qty: 1
+            isUsed: !!isUsed
         });
     }
+
     renderCart();
     updateCartBadge();
 }
@@ -154,8 +163,8 @@ function renderCart() {
     const totalEl = document.getElementById("cart-total");
     list.innerHTML = "";
 
-    if (cart.length === 0) {
-        list.innerHTML = "<p style='font-size:13px;color:#6b7280;'>Корзина пока пуста.</p>";
+    if (!cart.length) {
+        list.innerHTML = "<p style='color:#6b7280;font-size:13px;'>Корзина пуста</p>";
         totalEl.textContent = "0 ₽";
         updateCartBadge();
         return;
@@ -183,6 +192,7 @@ function renderCart() {
         const bottom = document.createElement("div");
         bottom.className = "cart-item-bottom";
 
+        // Количество
         const qty = document.createElement("div");
         qty.className = "cart-qty";
 
@@ -195,110 +205,96 @@ function renderCart() {
         const qtyValue = document.createElement("span");
         qtyValue.textContent = item.qty;
 
-        minus.addEventListener("click", () => {
-            item.qty -= 1;
+        minus.onclick = () => {
+            item.qty--;
             if (item.qty <= 0) {
                 cart = cart.filter(i => i.id !== item.id);
             }
             renderCart();
             updateCartBadge();
-        });
+        };
 
-        plus.addEventListener("click", () => {
-            item.qty += 1;
+        plus.onclick = () => {
+            item.qty++;
             renderCart();
             updateCartBadge();
-        });
+        };
 
-        qty.appendChild(minus);
-        qty.appendChild(qtyValue);
-        qty.appendChild(plus);
+        qty.append(minus, qtyValue, plus);
 
         const price = document.createElement("div");
         price.className = "product-price";
         price.textContent = formatPrice(item.price * item.qty);
 
-        bottom.appendChild(qty);
-        bottom.appendChild(price);
-
-        info.appendChild(name);
-        info.appendChild(meta);
-        info.appendChild(bottom);
-
-        row.appendChild(info);
-        list.appendChild(row);
+        bottom.append(qty, price);
+        info.append(name, meta, bottom);
+        row.append(info);
+        list.append(row);
     });
 
     totalEl.textContent = formatPrice(total);
     updateCartBadge();
 }
 
-// ----- ПОИСК И ФИЛЬТРЫ -----
-
+// ---------------------------
+//   ПОИСК И ФИЛЬТРЫ
+// ---------------------------
 function setupCatalogControls() {
-    // НОВЫЕ
     const searchNew = document.getElementById("search-new");
-    const filterNewBlock = document.getElementById("brand-filters-new");
-    let newBrand = "all";
+    const filterNew = document.getElementById("brand-filters-new");
+    let brandNew = "all";
 
-    function updateNew() {
-        renderCatalog("new-list", productsNew, searchNew.value, newBrand, false);
-    }
-
-    if (searchNew) {
-        searchNew.addEventListener("input", updateNew);
-    }
-
-    if (filterNewBlock) {
-        filterNewBlock.addEventListener("click", (e) => {
-            if (e.target.classList.contains("brand-btn")) {
-                filterNewBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-                e.target.classList.add("active");
-                newBrand = e.target.dataset.brand;
-                updateNew();
-            }
-        });
-    }
-
-    // Б/У
     const searchUsed = document.getElementById("search-used");
-    const filterUsedBlock = document.getElementById("brand-filters-used");
-    let usedBrand = "all";
+    const filterUsed = document.getElementById("brand-filters-used");
+    let brandUsed = "all";
 
-    function updateUsed() {
-        renderCatalog("used-list", productsUsed, searchUsed.value, usedBrand, true);
+    function updNew() {
+        renderCatalog("new-list", productsNew, searchNew.value, brandNew, false);
     }
 
-    if (searchUsed) {
-        searchUsed.addEventListener("input", updateUsed);
+    function updUsed() {
+        renderCatalog("used-list", productsUsed, searchUsed.value, brandUsed, true);
     }
 
-    if (filterUsedBlock) {
-        filterUsedBlock.addEventListener("click", (e) => {
+    if (searchNew) searchNew.oninput = updNew;
+    if (searchUsed) searchUsed.oninput = updUsed;
+
+    if (filterNew)
+        filterNew.onclick = e => {
             if (e.target.classList.contains("brand-btn")) {
-                filterUsedBlock.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+                filterNew.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
                 e.target.classList.add("active");
-                usedBrand = e.target.dataset.brand;
-                updateUsed();
+                brandNew = e.target.dataset.brand;
+                updNew();
             }
-        });
-    }
+        };
 
-    updateNew();
-    updateUsed();
+    if (filterUsed)
+        filterUsed.onclick = e => {
+            if (e.target.classList.contains("brand-btn")) {
+                filterUsed.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                brandUsed = e.target.dataset.brand;
+                updUsed();
+            }
+        };
+
+    updNew();
+    updUsed();
 }
 
-// ----- ЗАГРУЗКА ТОВАРОВ ИЗ JSON -----
-
+// ---------------------------
+//   ЗАГРУЗКА ТОВАРОВ
+// ---------------------------
 async function loadProducts() {
     try {
-        const [newRes, usedRes] = await Promise.all([
+        const [newR, usedR] = await Promise.all([
             fetch("products_new.json"),
             fetch("products_used.json")
         ]);
 
-        productsNew = await newRes.json();
-        productsUsed = await usedRes.json();
+        productsNew = await newR.json();
+        productsUsed = await usedR.json();
     } catch (e) {
         console.error("Ошибка загрузки товаров", e);
         productsNew = [];
@@ -308,86 +304,35 @@ async function loadProducts() {
     setupCatalogControls();
 }
 
-// ----- ОФОРМЛЕНИЕ ЗАКАЗА -----
-
-const checkoutBtn = document.getElementById("checkout-btn");
+// ---------------------------
+//   ОФОРМЛЕНИЕ ЗАКАЗА
+// ---------------------------
 const submitOrderBtn = document.getElementById("submit-order-btn");
-
-function recalcCheckoutTotals() {
-    const productsTotal = getCartTotal();
-    const deliveryInput = document.getElementById("order-delivery-cost");
-    let delivery = 0;
-    if (deliveryInput) {
-        const raw = (deliveryInput.value || "").replace(/\s/g, "");
-        delivery = parseInt(raw, 10) || 0;
-    }
-    const productsSpan = document.getElementById("checkout-products-sum");
-    const deliverySpan = document.getElementById("checkout-delivery-sum");
-    const totalSpan = document.getElementById("checkout-total-sum");
-
-    if (productsSpan) productsSpan.textContent = formatPrice(productsTotal);
-    if (deliverySpan) deliverySpan.textContent = formatPrice(delivery);
-    if (totalSpan) totalSpan.textContent = formatPrice(productsTotal + delivery);
-}
-
-if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-        if (cart.length === 0) {
-            alert("Корзина пуста");
-            return;
-        }
-        recalcCheckoutTotals();
-        showPage("checkout");
-    });
-}
-
-const deliveryInput = document.getElementById("order-delivery-cost");
-if (deliveryInput) {
-    deliveryInput.addEventListener("input", () => {
-        recalcCheckoutTotals();
-    });
-}
 
 if (submitOrderBtn) {
     submitOrderBtn.addEventListener("click", () => {
-        if (cart.length === 0) {
+
+        if (!cart.length) {
             alert("Корзина пуста");
             return;
         }
 
-        const nameEl = document.getElementById("order-name");
-        const phoneEl = document.getElementById("order-phone");
-        const contactEl = document.getElementById("order-contact-method");
-        const deliveryTypeEl = document.getElementById("order-delivery-type");
-        const deliveryCostEl = document.getElementById("order-delivery-cost");
-        const addressEl = document.getElementById("order-address");
-        const commentEl = document.getElementById("order-comment");
-
-        const name = nameEl.value.trim();
-        const phone = phoneEl.value.trim();
+        const name = document.getElementById("order-name").value.trim();
+        const phone = document.getElementById("order-phone").value.trim();
+        const contact_method = document.getElementById("order-contact-method").value;
+        const delivery_type = document.getElementById("order-delivery-type").value;
+        const delivery_cost = parseInt((document.getElementById("order-delivery-cost").value || "").replace(/\s/g, "")) || 0;
+        const address = document.getElementById("order-address").value.trim();
+        const comment = document.getElementById("order-comment").value.trim();
 
         if (!name || !phone) {
-            alert("Пожалуйста, укажите имя и телефон.");
+            alert("Введите имя и телефон");
             return;
         }
 
-        const contact_method = contactEl.value;
-        const delivery_type = deliveryTypeEl.value;
-        const delivery_cost = parseInt((deliveryCostEl.value || "").replace(/\s/g, ""), 10) || 0;
-        const address = addressEl.value.trim();
-        const comment = commentEl.value.trim();
-
-        const total = getCartTotal();
-
         const payload = {
-            items: cart.map(item => ({
-                name: item.name,
-                qty: item.qty,
-                price: item.price,
-                isUsed: item.isUsed,
-                brand: item.brand
-            })),
-            total: total,
+            items: cart,
+            total: getCartTotal(),
             name,
             phone,
             contact_method,
@@ -396,36 +341,37 @@ if (submitOrderBtn) {
             address,
             comment
         };
-if (tg) {
-    tg.sendData(JSON.stringify(payload));
 
-    // 🔥 ТЕСТ: проверяем, что sendData сработал
-    console.log("SEND DATA:", payload);
-    alert("sendData выполнен! (WebApp работает)");
-} else {
-    alert("Для теста:\n" + JSON.stringify(payload, null, 2));
-}
+        // ------------------------
+        //    ОТПРАВКА В TELEGRAM
+        // ------------------------
+        if (tg) {
+            tg.sendData(JSON.stringify(payload));
+            console.log("SEND DATA:", payload);
+        } else {
+            alert("Ошибка: Telegram WebApp не инициализирован");
+            return;
+        }
 
+        alert("Ваш заказ отправлен менеджеру 🙌");
 
         cart = [];
         renderCart();
         updateCartBadge();
         showPage("new");
-        alert("Заказ отправлен, мы скоро с вами свяжемся 🙌");
     });
 }
 
-// ----- НАВИГАЦИЯ ВНИЗУ -----
-
+// ---------------------------
+//   НАВИГАЦИЯ
+// ---------------------------
 document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const page = btn.dataset.page;
-        showPage(page);
-    });
+    btn.onclick = () => showPage(btn.dataset.page);
 });
 
-// ----- СТАРТ -----
-
+// ---------------------------
+//   ЗАПУСК
+// ---------------------------
 showPage("new");
 loadProducts();
 updateCartBadge();
